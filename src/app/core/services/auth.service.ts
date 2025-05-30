@@ -1,57 +1,54 @@
+// src/app/core/services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { User, UserRole } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface LoginDto  { email: string; password: string; }
+export interface RegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  provincia: string;
+  metodoPago: 'Enzona' | 'Transfermovil';
+  rolID: number;
+}
+export interface AuthResponse { access_token: string; user: any; }
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private baseUrl = 'http://localhost:3000';
 
-  constructor() {
-    // Podrías cargar el usuario desde localStorage aquí
-  }
+  constructor(private http: HttpClient) {}
 
-  login(credentials: { email: string, password: string }): Observable<User> {
-    // Simulación: Reemplazar con llamada HTTP real
-    console.log('Login attempt:', credentials);
-    if (credentials.email === 'user@example.com' && credentials.password === 'password') {
-      const mockUser: User = {
-        id: '1',
-        username: 'Usuario Ejemplo',
-        email: 'user@example.com',
-        provincia: 'La Habana',
-        role: UserRole.USER,
-        token: 'fake-jwt-token'
-      };
-      this.currentUserSubject.next(mockUser);
-      // localStorage.setItem('currentUser', JSON.stringify(mockUser));
-      return of(mockUser);
-    }
-    return throwError(() => new Error('Credenciales inválidas'));
-  }
+  login(credentials: LoginDto): Observable<AuthResponse> {
+  console.log('[AuthService] login() llamado con:', credentials);
+  return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, credentials)
+    .pipe(
+      tap(res => {
+        console.log('[AuthService] respuesta recibida:', res);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', res.access_token);
+        }
+      })
+    );
+}
 
-  register(userData: Omit<User, 'id' | 'token'>): Observable<User> {
-    // Simulación: Reemplazar con llamada HTTP real
-    console.log('Register attempt:', userData);
-    const newUser: User = {
-      id: Math.random().toString(36).substring(7),
-      ...userData,
-      token: 'fake-jwt-token-new-user'
-    };
-    this.currentUserSubject.next(newUser);
-    // localStorage.setItem('currentUser', JSON.stringify(newUser));
-    return of(newUser);
+  register(data: RegisterDto): Observable<any> {
+    return this.http.post(`${this.baseUrl}/users`, data);
   }
 
   logout(): void {
-    this.currentUserSubject.next(null);
-    // localStorage.removeItem('currentUser');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+    }
   }
 
-  get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
+  get token(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('token');
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.token;
   }
 }

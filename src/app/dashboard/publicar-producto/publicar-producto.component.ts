@@ -1,23 +1,23 @@
-import { Component, inject } from '@angular/core';
+// publicar-producto.component.ts
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ProductService } from './../../features/mipyme/services/product.service';
-import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Router } from '@angular/router';
+import { ProductService } from './../../features/mipyme/services/product.service';
 
 @Component({
   selector: 'app-publicar-producto',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './publicar-producto.component.html',
   styleUrls: ['./publicar-producto.component.css']
 })
-export class PublicarProductoComponent {
+export class PublicarProductoComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
-  router = inject(Router); // Público para el template
+  private router = inject(Router);
 
-  productoForm: FormGroup;
+  productoForm!: FormGroup;
   provincias = [
     'Pinar del Río', 'Artemisa', 'La Habana', 'Mayabeque', 'Matanzas',
     'Cienfuegos', 'Villa Clara', 'Sancti Spíritus', 'Ciego de Ávila',
@@ -26,24 +26,19 @@ export class PublicarProductoComponent {
   ];
   submitted = false;
 
-  constructor() {
-    this.productoForm = this.fb.group({});
-    this.initForm();
-  }
-
-  private initForm(): void {
-    const provinciaControls = this.provincias.reduce((acc, provincia) => {
-      acc[provincia] = this.fb.control('', [Validators.min(0)]);
+  ngOnInit() {
+    const provinciaCtrls = this.provincias.reduce((acc, prov) => {
+      acc[prov] = new FormControl(null, Validators.min(0));
       return acc;
-    }, {} as { [key: string]: FormControl });
+    }, {} as Record<string, FormControl>);
 
     this.productoForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      descripcion: ['', [Validators.required, Validators.minLength(10)]],
-      precio: ['', [Validators.required, Validators.min(0.01)]],
-      cantidad: ['', [Validators.required, Validators.min(1)]],
-      imagen: ['', [Validators.required, Validators.pattern('https?://.+')]],
-      precioPorProvincia: this.fb.group(provinciaControls)
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      precioGeneral: [null, [Validators.required, Validators.min(0.01)]],
+      stock: [null, [Validators.required, Validators.min(1)]],
+      imagenes: [[], Validators.required],
+      preciosPorProvincia: this.fb.group(provinciaCtrls)
     });
   }
 
@@ -51,26 +46,29 @@ export class PublicarProductoComponent {
     return this.productoForm.controls;
   }
 
-  get provinciaControls() {
-    return (this.productoForm.get('precioPorProvincia') as FormGroup).controls;
-  }
-
-  publicar(): void {
+  publicar() {
     this.submitted = true;
-    
+    console.log('[Publicar] formulario válido?', this.productoForm.valid, this.productoForm.value);
+
     if (this.productoForm.invalid) {
       return;
     }
 
     this.productService.publicarProducto(this.productoForm.value).subscribe({
-      next: () => {
+      next: res => {
+        console.log('[Publicar] respuesta del servidor:', res);
         alert('Producto publicado con éxito!');
         this.router.navigate(['/dashboard']);
       },
-      error: (err: Error) => {
-        console.error('Error al publicar:', err);
+      error: err => {
+        console.error('[Publicar] error al publicar:', err);
         alert(`Error al publicar el producto: ${err.message}`);
       }
     });
   }
 }
+
+
+
+
+  

@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service'; // Ajusta la ruta
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService, LoginDto } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule    // para routerLink si lo usas
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -20,7 +24,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -28,17 +32,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (user) => {
-          console.log('Login successful', user);
-          this.router.navigate(['/']); // Redirigir al home
-        },
-        error: (err) => {
-          console.error('Login failed', err);
-          // Aquí manejarías el mostrar un mensaje de error al usuario
-        }
-      });
-    }
+    console.log('Login submit fired', this.loginForm.value);
+    const dto = this.loginForm.value;
+    this.authService.login(dto).subscribe({
+      next: () => { console.log('Navegando al home'); this.router.navigate(['/dashboard']); },
+      error: err => console.error('Error en login', err)
+    });
   }
 }

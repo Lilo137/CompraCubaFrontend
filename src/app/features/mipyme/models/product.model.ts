@@ -5,4 +5,5 @@ export interface Product {
   precioGeneral: number;
   stock: number;
   imageUrl?: string;
+  // etc. según tu entidad
 }

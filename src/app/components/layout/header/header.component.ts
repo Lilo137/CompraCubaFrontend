@@ -1,19 +1,22 @@
+// src/app/components/layout/header/header.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  private router = inject(Router); // Inyección moderna para standalone
+  public router = inject(Router);   // <-- público
+  public auth   = inject(AuthService);
 
-  // Método opcional para navegación programática
-  navegarAPublicar() {
-    this.router.navigate(['/publicar-producto']);
+  public logout() {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 }

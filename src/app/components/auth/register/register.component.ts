@@ -1,41 +1,71 @@
+// register.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserRole } from '../../../core/models/user.model'; // Asegúrate que esta ruta es correcta
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService, RegisterDto } from '../../../core/services/auth.service';
+import { UserRole } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],  // ← IMPORTANTE ReactiveFormsModule
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
-  UserRole = UserRole; // Para usarlo en el template
+  UserRole = UserRole;
   provincias = [
-    'Pinar del Rio', 'Artemisa', 'La Habana', 'Mayabeque', 'Matanzas',
-    'Cienfuegos', 'Villa Clara', 'Sancti Spiritus', 'Ciego de Avila',
-    'Camagüey', 'Las Tunas', 'Granma', 'Holguin', 'Santiago de Cuba',
-    'Guantanamo', 'Isla de la Juventud'
+    'Pinar del Río', 'Artemisa', 'La Habana', 'Mayabeque', 'Matanzas',
+    'Cienfuegos', 'Villa Clara', 'Sancti Spíritus', 'Ciego de Ávila',
+    'Camagüey', 'Las Tunas', 'Granma', 'Holguín', 'Santiago de Cuba',
+    'Guantánamo', 'Isla de la Juventud'
   ];
+  // Debes usar exactamente los valores de tu enum Prisma MetodoPago
+  metodosPago: Array<'Enzona'|'Transfermovil'> = ['Enzona', 'Transfermovil'];
 
-  constructor(private fb: FormBuilder) { }
+  private roleToIdMap: Record<string, number> = {
+    USER: 1,
+    MIPYME: 2
+  };
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      metodoPago: ['', Validators.required],
       provincia: ['', Validators.required],
-      role: [UserRole.USER, Validators.required]
+      role: [this.UserRole.USER, Validators.required]
     });
   }
 
-  onSubmit(): void {
-    if (this.registerForm.valid) {
-      // Lógica para manejar el envío del formulario
-      console.log(this.registerForm.value);
-    } else {
-      // Marcar todos los campos como tocados para mostrar errores
+  onSubmit() {
+    console.log('submit fired', this.registerForm.value);
+    if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      return;
     }
+    const fv = this.registerForm.value;
+    const dto: RegisterDto = {
+      username: fv.username,
+      email: fv.email,
+      password: fv.password,
+      metodoPago: fv.metodoPago,
+      provincia: fv.provincia,
+      rolID: this.roleToIdMap[fv.role]
+    };
+    this.auth.register(dto).subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: e => alert('Error al registrar')
+    });
   }
 }
+
+  

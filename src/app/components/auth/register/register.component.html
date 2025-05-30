@@ -1,21 +1,52 @@
-<!-- ... otros campos ... -->
-      <div class="form-group">
-        <label for="provincia">Provincia</label>
-        <select id="provincia" formControlName="provincia" required>
-          <option value="" disabled>Selecciona tu provincia</option>
-          <option *ngFor="let p of provincias" [value]="p">{{p}}</option>
-        </select>
-      </div>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="username">Nombre de usuario</label>
+    <input id="username" type="text" formControlName="username" required>
+  </div>
 
-      <div class="form-group">
-        <label>Rol:</label>
-        <div class="radio-group">
-          <label>
-            <input type="radio" formControlName="role" [value]="UserRole.USER" required> Usuario
-          </label>
-          <label>
-            <input type="radio" formControlName="role" [value]="UserRole.MIPYME" required> MIPYME (Vendedor)
-          </label>
-        </div>
-      </div>
-<!-- ... botón de submit ... -->
+  <div class="form-group">
+    <label for="email">Correo electrónico</label>
+    <input id="email" type="email" formControlName="email" required>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Contraseña</label>
+    <input id="password" type="password" formControlName="password" required>
+  </div>
+
+  <div class="form-group">
+    <label for="metodoPago">Método de pago</label>
+    <select id="metodoPago" formControlName="metodoPago" required>
+      <option value="" disabled>Selecciona un método</option>
+      <option *ngFor="let m of metodosPago" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="provincia">Provincia</label>
+    <select id="provincia" formControlName="provincia" required>
+      <option value="" disabled>Selecciona tu provincia</option>
+      <option *ngFor="let p of provincias" [value]="p">{{ p }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Rol:</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" formControlName="role" [value]="UserRole.USER" required>
+        Usuario
+      </label>
+      <label>
+        <input type="radio" formControlName="role" [value]="UserRole.MIPYME" required>
+        MIPYME (Vendedor)
+      </label>
+    </div>
+  </div>
+
+  <button
+    type="submit"
+    class="button button-primary">
+    Crear cuenta
+  </button>
+</form>

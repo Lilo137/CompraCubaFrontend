@@ -1,2 +1,19 @@
+<div class="home-container">
+  <h1>Bienvenido a CompraCuba</h1>
+  <div class="home-actions">
+    <button routerLink="/login" class="btn btn-primary">Iniciar Sesión</button>
+    <button routerLink="/register" class="btn btn-secondary">Regístrate</button>
+  </div>
 
-<p>Soy Lore</p>
+  <h2>Productos Disponibles</h2>
+  <div class="product-list">
+    <div *ngFor="let p of products" class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ p.name }}</h5>
+        <p class="card-text">{{ p.description }}</p>
+        <p class="card-text"><strong>Precio:</strong> {{ p.precioGeneral | currency:'USD' }}</p>
+        <a [routerLink]="['/products', p.id]" class="btn btn-outline-primary">Ver Detalle</a>
+      </div>
+    </div>
+  </div>
+</div>

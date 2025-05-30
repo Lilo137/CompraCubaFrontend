@@ -1,35 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from './../../../../../src/environment/enviroment';
+import { AuthService } from '../../../core/services/auth.service';
+import { CreateProductDto } from '../models/create-product.dto';  // define esta interfaz
+import { Product } from '../../../core/models/product.model';
 
-interface ProvinciaVentas {
-  name: string;
-  value: number;
-}
-
-interface ProductoStock {
-  name: string;
-  value: number;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  private apiUrl = `${environment.apiBaseUrl}/api/mipyme`;
+  private baseUrl = 'http://localhost:3000/products';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService
+  ) {}
 
-  getVentasPorProvincia(): Observable<ProvinciaVentas[]> {
-    return this.http.get<ProvinciaVentas[]>(`${this.apiUrl}/ventas/provincia`);
+  publicarProducto(data: CreateProductDto): Observable<any> {
+    const token = this.auth.token;
+    return this.http.post<any>(
+      this.baseUrl,
+      data,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
   }
-
-  getStockPorProducto(): Observable<ProductoStock[]> {
-    return this.http.get<ProductoStock[]>(`${this.apiUrl}/stock`);
-  }
-
-  publicarProducto(producto: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/publicar`, producto);
+  getAll(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}`);
   }
 }
