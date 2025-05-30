@@ -1,0 +1,52 @@
+/* src/app/components/auth/login/login.component.css */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: calc(100vh - 120px); /* Resta altura de header y footer aprox. */
+}
+
+.login-card {
+  width: 100%;
+  max-width: 350px;
+  padding: 20px 26px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.login-card h1 {
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.login-button, .register-button {
+  width: 100%;
+  height: var(--input-height);
+  margin-top: 10px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #555;
+  margin-top: 20px;
+}
+
+.divider {
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+  font-size: 12px;
+  color: #767676;
+}
+
+.divider::before, .divider::after {
+  content: "";
+  display: inline-block;
+  width: 40%;
+  height: 1px;
+  background-color: #ddd;
+  vertical-align: middle;
+  margin: 0 5px;
+}

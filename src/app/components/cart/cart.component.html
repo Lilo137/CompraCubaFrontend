@@ -1,0 +1,10 @@
+<div *ngIf="cart.items.length > 0">
+  <div *ngFor="let item of cart.items">
+    {{ item.product.name }} - {{ item.quantity }} x {{ item.price | currency }}
+  </div>
+  <p>Total: {{ cart.total | currency }}</p>
+  <button (click)="goToCheckout()">Proceder al pago</button>
+</div>
+<div *ngIf="cart.items.length === 0">
+  <p>Tu carrito está vacío</p>
+</div>

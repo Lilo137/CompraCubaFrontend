@@ -1,0 +1,21 @@
+<!-- ... otros campos ... -->
+      <div class="form-group">
+        <label for="provincia">Provincia</label>
+        <select id="provincia" formControlName="provincia" required>
+          <option value="" disabled>Selecciona tu provincia</option>
+          <option *ngFor="let p of provincias" [value]="p">{{p}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Rol:</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" formControlName="role" [value]="UserRole.USER" required> Usuario
+          </label>
+          <label>
+            <input type="radio" formControlName="role" [value]="UserRole.MIPYME" required> MIPYME (Vendedor)
+          </label>
+        </div>
+      </div>
+<!-- ... botón de submit ... -->

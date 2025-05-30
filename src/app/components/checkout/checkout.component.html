@@ -1,0 +1,44 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="fullName">Nombre completo</label>
+    <input id="fullName" type="text" formControlName="fullName">
+    <div *ngIf="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched">
+      Nombre requerido (mínimo 10 caracteres)
+    </div>
+  </div>
+
+  <div>
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email">
+    <div *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched">
+      Email inválido
+    </div>
+  </div>
+
+  <div>
+    <label for="address">Direccion</label>
+    <input id="address" type="text" formControlName="address">
+    <div *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched">
+      Dirección requerida
+    </div>
+  </div>
+
+  <div>
+    <label for="provincia">Provincia</label>
+    <input id="provincia" type="text" formControlName="provincia">
+    <div *ngIf="checkoutForm.get('provincia')?.invalid && checkoutForm.get('provincia')?.touched">
+      Provincia requerida
+    </div>
+  </div>
+
+  <div>
+    <label>Método de pago:</label>
+    <select formControlName="MetodoPago">
+      <option value="Enzona">Enzona</option>
+      <option value="transfermovil">Transfermovil</option>
+    
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="checkoutForm.invalid">Completar compra</button>
+</form>

@@ -1,0 +1,57 @@
+<header class="main-header">
+  <div class="header-top">
+    <div class="container-fluid">
+      <div class="logo">
+        <a routerLink="/">CompraCuba</a>
+      </div>
+
+      <div class="search-bar">
+        <select class="search-category-select">
+          <option>Todo</option>
+          <option>Componentes de PC</option>
+          <option>Laptops</option>
+          <option>Servicios Online</option>
+          <!-- Más categorías -->
+        </select>
+        <input type="text" placeholder="Buscar en CompraCuba">
+        <button class="search-button"><i class="icon-search"></i></button>
+      </div>
+      <nav class="user-nav">
+        <a routerLink="/login" class="nav-link">
+          <span>Bienvenido a CompraCuba</span>
+          <span>Cuenta</span>
+        </a>
+        <a routerLink="/orders" class="nav-link">
+
+          <span>Pedidos</span>
+        </a>
+        <a routerLink="/cart" class="nav-link cart-link">
+          <span class="cart-count">0</span>
+          <span>Carrito</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+  <div class="header-bottom">
+    <div class="container-fluid">
+      <nav class="main-nav">
+        <a href="#">Productos</a>
+        <div class="categoria-container">
+          <a href="#" class="categoria-btn">Categorías</a>
+          <select class="categoria-select" onchange="location = this.value;">
+            <option value="#">Seleccione una categoría</option>
+            <option value="#componentes">Componentes de PC</option>
+            <option value="#laptops">Laptops</option>
+            <option value="#servicios">Servicios Online</option>
+            <option value="#ebooks">Ebooks</option>
+          </select>
+        </div>
+
+
+        <a (click)="navegarAPublicar()" class="nav-link">Publicar Productos (MIPYME)</a>
+
+        <!-- Más enlaces -->
+      </nav>
+    </div>
+  </div>
+</header>

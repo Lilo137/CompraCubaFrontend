@@ -1,0 +1,10 @@
+/* Adapta los estilos del login.css, por ejemplo: */
+.radio-group label {
+  margin-right: 15px;
+  font-weight: normal;
+}
+.radio-group input[type="radio"] {
+  margin-right: 5px;
+  width: auto; /* Para que no ocupe todo el ancho */
+  height: auto;
+}
