@@ -1,0 +1,52 @@
+/* src/app/components/mipyme/mipyme-dashboard.component.css */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.sidebar {
+  width: 240px;
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+}
+.sidebar nav ul li {
+  margin: 10px 0;
+}
+.sidebar nav ul li a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-size: 1rem;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.sidebar nav ul li a:hover,
+.sidebar nav ul li.active a {
+  background: #34495e;
+}
+.main-content {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background: white;
+}
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+  }
+}

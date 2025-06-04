@@ -1,6 +1,6 @@
-/* src/app/components/auth/register/register.component.css */
+/* src/app/components/account/account.component.css */
 
-/* === Reutilizamos casi todo de login.component.css === */
+/* === Reutilizamos estilos de login/register === */
 
 .login-container {
   display: flex;
@@ -58,70 +58,19 @@
   box-shadow: 0 0 0 3px #c8f3fa, 0 1px 2px rgba(15,17,17,.15) inset;
 }
 
-/* Botones de login y registro */
-.login-button,
+/* Botón guardar cambios */
 .register-button {
   width: 100%;
   height: var(--input-height);
   margin-top: 10px;
   border: none;
+  font-weight: bold;
+}
+.register-button:hover {
+  opacity: 0.9;
 }
 
-/* Texto de términos y condiciones (no se usa aquí) */
-.terms {
-  font-size: 12px;
-  color: #555;
-  margin-top: 20px;
-}
-
-/* Separador con línea y texto centrado */
-.divider {
-  margin: 20px 0;
-  text-align: center;
-  position: relative;
-  font-size: 12px;
-  color: #767676;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  display: inline-block;
-  width: 40%;
-  height: 1px;
-  background-color: #ddd;
-  vertical-align: middle;
-  margin: 0 5px;
-}
-
-/* Footer del formulario (enlace a Login) */
-.login-footer {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.login-footer .divider {
-  margin: 20px 0;
-}
-
-/* Radio buttons */
-.radio-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 5px;
-}
-.radio-group label {
-  font-weight: normal;
-  font-size: 0.95rem;
-  color: #2c3e50;
-}
-.radio-group input[type="radio"] {
-  margin-right: 5px;
-  width: auto;
-  height: auto;
-}
-
-/* Validaciones */
+/* Invalid feedback */
 .is-invalid {
   border-color: #e74c3c !important;
 }
@@ -132,7 +81,18 @@
   margin-top: 4px;
 }
 
-/* === Responsive pequeño === */
+/* Mensaje de carga/error */
+.loading-error {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+.error-text {
+  color: #e74c3c;
+}
+
+/* Responsive */
 @media (max-width: 576px) {
   .login-card {
     padding: 16px 20px;
@@ -144,7 +104,6 @@
   .form-group select {
     font-size: 13px;
   }
-  .login-button,
   .register-button {
     font-size: 0.95rem;
   }

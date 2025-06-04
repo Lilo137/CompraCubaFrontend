@@ -1,0 +1,413 @@
+<div class="products-container">
+  <!-- Header con título y botón -->
+  <header class="products-header">
+    <h1>Gestión de Productos</h1>
+    <button (click)="toggleNewForm()" class="btn btn-primary">
+      <span *ngIf="!showNewForm">＋ Agregar Producto</span>
+      <span *ngIf="showNewForm">✕ Cancelar</span>
+    </button>
+  </header>
+
+  <!-- FORMULARIO: Crear Nuevo Producto -->
+  <section *ngIf="showNewForm" class="new-product-section card p-4 mb-4">
+    <h2 class="section-title">Crear Nuevo Producto</h2>
+    <form
+      [formGroup]="productForm"
+      (ngSubmit)="createProduct()"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="row gx-3 gy-3">
+        <!-- Nombre -->
+        <div class="col-md-6">
+          <label for="prod-name" class="form-label">Nombre</label>
+          <input
+            id="prod-name"
+            type="text"
+            formControlName="name"
+            class="form-control"
+            placeholder="Ingrese el nombre del producto"
+            [class.is-invalid]="
+              productForm.get('name')?.invalid && productForm.get('name')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="productForm.get('name')?.errors?.['required']">
+              El nombre es obligatorio.
+            </span>
+          </div>
+        </div>
+
+        <!-- Categoría (select fijo) -->
+        <div class="col-md-6">
+          <label for="prod-category" class="form-label">Categoría</label>
+          <select
+            id="prod-category"
+            formControlName="categoria"
+            class="form-control"
+            [class.is-invalid]="
+              productForm.get('categoria')?.invalid &&
+              productForm.get('categoria')?.touched
+            "
+          >
+            <option value="" disabled>Selecciona categoría</option>
+            <option *ngFor="let cat of categories" [value]="cat">
+              {{ cat }}
+            </option>
+          </select>
+          <div class="invalid-feedback">
+            <span *ngIf="productForm.get('categoria')?.errors?.['required']">
+              La categoría es obligatoria.
+            </span>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="col-12">
+          <label for="prod-description" class="form-label">Descripción</label>
+          <textarea
+            id="prod-description"
+            rows="3"
+            formControlName="description"
+            class="form-control"
+            placeholder="Detalles del producto (mínimo 10 caracteres)"
+            [class.is-invalid]="
+              productForm.get('description')?.invalid &&
+              productForm.get('description')?.touched
+            "
+          ></textarea>
+          <div class="invalid-feedback">
+            <span *ngIf="productForm.get('description')?.errors?.['required']">
+              La descripción es obligatoria.
+            </span>
+            <span *ngIf="productForm.get('description')?.errors?.['minlength']">
+              Mínimo
+              {{ productForm.get('description')?.errors?.['minlength']
+                ?.requiredLength }}
+              caracteres.
+            </span>
+          </div>
+        </div>
+
+        <!-- Stock -->
+        <div class="col-md-4">
+          <label for="prod-stock" class="form-label">Stock</label>
+          <input
+            id="prod-stock"
+            type="number"
+            formControlName="stock"
+            class="form-control"
+            placeholder="0"
+            min="0"
+            [class.is-invalid]="
+              productForm.get('stock')?.invalid &&
+              productForm.get('stock')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="productForm.get('stock')?.errors?.['required']">
+              El stock es obligatorio.
+            </span>
+            <span *ngIf="productForm.get('stock')?.errors?.['min']">
+              El stock debe ser mínimo 0.
+            </span>
+          </div>
+        </div>
+
+        <!-- Precio General -->
+        <div class="col-md-4">
+          <label for="prod-price" class="form-label">Precio (USD)</label>
+          <input
+            id="prod-price"
+            type="number"
+            formControlName="precioGeneral"
+            class="form-control"
+            placeholder="0.00"
+            min="0.01"
+            step="0.01"
+            [class.is-invalid]="
+              productForm.get('precioGeneral')?.invalid &&
+              productForm.get('precioGeneral')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="productForm.get('precioGeneral')?.errors?.['required']">
+              El precio es obligatorio.
+            </span>
+            <span *ngIf="productForm.get('precioGeneral')?.errors?.['min']">
+              El precio debe ser mínimo 0.01.
+            </span>
+          </div>
+        </div>
+
+        <!-- Imágenes -->
+        <div class="col-12">
+          <label class="form-label">Imágenes (varias)</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onFilesSelected($event)"
+            class="form-control"
+          />
+          <div class="preview-new-images">
+            <div
+              *ngFor="let img of previewNewImages; let i = index"
+              class="preview-thumb"
+            >
+              <img [src]="img" alt="Preview {{ i }}" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de guardar -->
+        <div class="col-12 text-end">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="productForm.invalid"
+          >
+            💾 Guardar Producto
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Mensajes de carga / error -->
+  <div *ngIf="loading" class="alert alert-info">Cargando productos ...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- LISTADO DE PRODUCTOS -->
+  <section *ngIf="!loading && !error" class="product-list">
+    <div *ngIf="products.length > 0; else noProducts" class="grid-container">
+      <div *ngFor="let p of products" class="product-card card">
+        <div class="card-body">
+          <h5 class="card-title">{{ p.name }}</h5>
+          <p class="card-text"><strong>Categoría:</strong> {{ p.categoria }}</p>
+          <p class="card-text">
+            <strong>Stock:</strong>
+            <span [ngClass]="{ 'low-stock': p.stock <= 5 }">{{ p.stock }}</span>
+          </p>
+          <p class="card-text">
+            <strong>Precio:</strong> {{ p.precioGeneral | currency:'USD' }}
+          </p>
+          <p class="card-text description-text">
+            {{ p.description }}
+          </p>
+          <div class="card-actions">
+            <button (click)="startEdit(p)" class="btn btn-outline-secondary btn-sm">
+              ✎ Editar
+            </button>
+            <button (click)="deleteProduct(p.id)" class="btn btn-outline-danger btn-sm">
+              🗑 Eliminar
+            </button>
+          </div>
+
+          <!-- Miniaturas de imágenes existentes -->
+          <div class="existing-thumbs">
+            <div *ngFor="let img of p.imagenes" class="thumb-wrapper">
+              <img
+                [src]="apiUrl + img.url"
+                alt="img-{{ img.id }}"
+                class="thumb-img"
+                (error)="onImgError($event)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noProducts>
+      <div class="no-products alert alert-warning">
+        Aún no hay productos en tu inventario.
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- FORMULARIO: Editar Producto -->
+  <section *ngIf="editingProduct" class="edit-product-section card p-4 mt-4">
+    <h2 class="section-title">Editar Producto</h2>
+    <form
+      [formGroup]="editForm"
+      (ngSubmit)="updateProduct()"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="row gx-3 gy-3">
+        <!-- Nombre -->
+        <div class="col-md-6">
+          <label for="edit-name" class="form-label">Nombre</label>
+          <input
+            id="edit-name"
+            type="text"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="
+              editForm.get('name')?.invalid && editForm.get('name')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="editForm.get('name')?.errors?.['required']">
+              El nombre es obligatorio.
+            </span>
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div class="col-md-6">
+          <label for="edit-category" class="form-label">Categoría</label>
+          <select
+            id="edit-category"
+            formControlName="categoria"
+            class="form-control"
+            [class.is-invalid]="
+              editForm.get('categoria')?.invalid && editForm.get('categoria')?.touched
+            "
+          >
+            <option value="" disabled>Selecciona categoría</option>
+            <option *ngFor="let cat of categories" [value]="cat">
+              {{ cat }}
+            </option>
+          </select>
+          <div class="invalid-feedback">
+            <span *ngIf="editForm.get('categoria')?.errors?.['required']">
+              La categoría es obligatoria.
+            </span>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="col-12">
+          <label for="edit-description" class="form-label">Descripción</label>
+          <textarea
+            id="edit-description"
+            rows="3"
+            formControlName="description"
+            class="form-control"
+            [class.is-invalid]="
+              editForm.get('description')?.invalid &&
+              editForm.get('description')?.touched
+            "
+          ></textarea>
+          <div class="invalid-feedback">
+            <span *ngIf="editForm.get('description')?.errors?.['required']">
+              La descripción es obligatoria.
+            </span>
+            <span *ngIf="editForm.get('description')?.errors?.['minlength']">
+              Mínimo
+              {{ editForm.get('description')?.errors?.['minlength']?.requiredLength
+              }}
+              caracteres.
+            </span>
+          </div>
+        </div>
+
+        <!-- Stock -->
+        <div class="col-md-4">
+          <label for="edit-stock" class="form-label">Stock</label>
+          <input
+            id="edit-stock"
+            type="number"
+            formControlName="stock"
+            class="form-control"
+            min="0"
+            [class.is-invalid]="
+              editForm.get('stock')?.invalid && editForm.get('stock')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="editForm.get('stock')?.errors?.['required']">
+              El stock es obligatorio.
+            </span>
+            <span *ngIf="editForm.get('stock')?.errors?.['min']">
+              El stock debe ser mínimo 0.
+            </span>
+          </div>
+        </div>
+
+        <!-- Precio General -->
+        <div class="col-md-4">
+          <label for="edit-price" class="form-label">Precio (USD)</label>
+          <input
+            id="edit-price"
+            type="number"
+            formControlName="precioGeneral"
+            class="form-control"
+            min="0.01"
+            step="0.01"
+            [class.is-invalid]="
+              editForm.get('precioGeneral')?.invalid &&
+              editForm.get('precioGeneral')?.touched
+            "
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="editForm.get('precioGeneral')?.errors?.['required']">
+              El precio es obligatorio.
+            </span>
+            <span *ngIf="editForm.get('precioGeneral')?.errors?.['min']">
+              El precio debe ser mínimo 0.01.
+            </span>
+          </div>
+        </div>
+
+        <!-- Imágenes Actuales -->
+        <div class="col-12">
+          <label class="form-label">Imágenes Actuales</label>
+          <div class="existing-thumbs">
+            <div *ngFor="let img of editingProduct!.imagenes" class="thumb-wrapper">
+              <img
+                [src]="apiUrl + img.url"
+                alt="img-{{ img.id }}"
+                class="thumb-img"
+                (error)="onImgError($event)"
+              />
+              <button
+                type="button"
+                class="btn btn-sm btn-danger btn-delete-img"
+                (click)="onDeleteImage(editingProduct!.id, img.id)"
+              >
+                🗑
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subir Nuevas Imágenes -->
+        <div class="col-12">
+          <label class="form-label">Agregar Nuevas Imágenes</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onFilesSelectedEdit($event)"
+            class="form-control"
+          />
+          <div class="preview-new-images">
+            <div
+              *ngFor="let img of previewNewImagesEdit; let i = index"
+              class="preview-thumb"
+            >
+              <img [src]="img" alt="Preview edit {{ i }}" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="col-12 text-end">
+          <button
+            type="submit"
+            class="btn btn-primary me-2"
+            [disabled]="editForm.invalid"
+          >
+            💾 Actualizar
+          </button>
+          <button (click)="cancelEdit()" class="btn btn-secondary">
+            ✕ Cancelar
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

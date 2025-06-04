@@ -1,0 +1,6 @@
+/* src/app/app.component.css */
+.app-main-content {
+  min-height: calc(100vh - 160px); /* Ajusta según altura de header + footer */
+  margin-top: 0;
+  padding-bottom: 20px;
+}

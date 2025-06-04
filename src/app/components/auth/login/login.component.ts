@@ -32,11 +32,25 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Login submit fired', this.loginForm.value);
-    const dto = this.loginForm.value;
-    this.authService.login(dto).subscribe({
-      next: () => { console.log('Navegando al home'); this.router.navigate(['/dashboard']); },
-      error: err => console.error('Error en login', err)
-    });
-  }
+  const dto = this.loginForm.value;
+  this.authService.login(dto).subscribe({
+    next: () => {
+      // Tomamos el usuario que ahora AuthService almacenó
+      const user = this.authService.user;
+      if (!user) {
+        // Algo raro: no debería pasar
+        this.router.navigate(['/']);
+        return;
+      }
+      if (user.rolID === 2) {
+        // Es mipyme → al dashboard administrativo
+        this.router.navigate(['/mipyme']);
+      } else {
+        // Es usuario normal → a home de compra
+        this.router.navigate(['/']);
+      }
+    },
+    error: err => console.error('Error en login', err)
+  });
+}
 }

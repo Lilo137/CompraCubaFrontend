@@ -1,4 +1,13 @@
 :root {
+  --primary-bg: #2c3e50;       /* color que quieras compartir en header/footer/sidebar */
+  --primary-text: #ecf0f1;
+  --accent-color: #f39c12;
+  --accent-hover: #d35400;
+  --input-bg: #ffffff;
+  --input-text: #2c3e50;
+  --border-radius: 6px;
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
   --amazon-orange: #FF9900;
   --amazon-orange-hover: #E68A00;
   --amazon-dark-blue: #131921;

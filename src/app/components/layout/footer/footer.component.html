@@ -1,1 +1,18 @@
-<h2>2025! CompraCuba. Todos los derechos reservados. </h2>
+<!-- src/app/components/layout/footer/footer.component.html -->
+<footer class="main-footer">
+  <div class="footer-content container">
+    <div class="footer-left">
+      <h3>Compra<span>Cuba</span></h3>
+      <p>© 2025 Todos los derechos reservados.</p>
+    </div>
+    <div class="footer-right">
+      <ul class="footer-links">
+        <li><a routerLink="/">Tienda</a></li>
+        <li *ngIf="!auth.isMipyme() && auth.isAuthenticated()"><a routerLink="/cart">Carrito</a></li>
+        <li *ngIf="auth.isAuthenticated()"><a routerLink="/account">Mi Cuenta</a></li>
+        <li><a routerLink="/about">Sobre Nosotros</a></li>
+        <li><a routerLink="/contact">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

@@ -1,200 +1,137 @@
-/* src/app/components/layout/header/header.component.css */
+/* Variables de color */
+:root {
+  --primary-bg: #2c3e50;
+  --primary-text: #ecf0f1;
+  --accent-color: #f39c12;
+  --accent-hover: #d35400;
+  --input-bg: #ffffff;
+  --input-text: #2c3e50;
+  --border-radius: 6px;
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* HEADER GENERAL */
 .main-header {
-  background-color: var(--amazon-dark-blue);
-  color: var(--amazon-text-light);
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
   padding: 0;
 }
-
-.main-header .container-fluid { /* Ancho completo para el header */
-  max-width: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-}
-
 .header-top {
-  padding: 10px 0;
-  border-bottom: 1px solid #3b4a5a ; /* Slightly lighter border */
-}
-
-.header-top .container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  height: 60px;
+  padding: 8px 16px;
 }
 
+/* LOGO */
 .logo a {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--amazon-text-light);
+  font-family: var(--font-sans);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-text);
   text-decoration: none;
+  letter-spacing: 1px;
+}
+.logo a span {
+  color: var(--accent-color);
 }
 .logo a:hover {
-  color: var(--amazon-orange);
+  color: var(--accent-hover);
 }
 
-.deliver-to {
-  font-size: 12px;
-  padding: 0 15px;
-  border: 1px solid transparent; /* For hover effect */
-  cursor: pointer;
-}
-.deliver-to:hover {
-  border-color: var(--amazon-text-light);
-  border-radius: var(--border-radius);
-}
-.deliver-to .icon-location { margin-right: 5px; } /* Necesitarás iconos CSS o SVG */
-
+/* SEARCH BAR */
 .search-bar {
-  display: flex;
-  flex-grow: 1;
-  margin: 0 15px;
-  height: 40px;
+  flex: 1 1 400px;
+  margin: 8px 16px;
+  position: relative;
 }
-
-.search-category-select {
-  background-color: #f3f3f3;
-  color: var(--amazon-text-dark);
-  border: none;
+.search-input-group {
+  display: flex;
+  width: 100%;
+}
+.search-input {
+  flex: 2;
+  padding: 8px 12px;
   border-radius: var(--border-radius) 0 0 var(--border-radius);
-  padding: 0 10px;
-  font-size: 12px;
-  width: auto; /* Ajustar según contenido o fijo */
-  height: 100%;
-}
-
-.search-bar input[type="text"] {
-  flex-grow: 1;
   border: none;
-  padding: 0 10px;
-  font-size: 15px;
-  height: 100%;
-  border-radius: 0; /* Se une con el select y el botón */
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-
-.search-button {
-  background-color: var(--amazon-orange);
-  border: none;
-  color: var(--amazon-text-dark);
-  padding: 0 12px;
-  cursor: pointer;
+.search-input::placeholder {
+  color: #7f8c8d;
+}
+.search-category-select {
+  flex: 1;
+  padding: 8px 12px;
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 45px;
+  border: none;
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-.search-button:hover {
-  background-color: var(--amazon-orange-hover);
-}
-.search-button .icon-search { font-size: 20px; } /* Necesitarás iconos CSS o SVG */
 
+/* NAVEGACIÓN DE USUARIO */
 .user-nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
-
 .user-nav .nav-link {
-  color: var(--amazon-text-light);
+  color: var(--primary-text);
   text-decoration: none;
-  padding: 8px 10px;
-  font-size: 12px;
-  border: 1px solid transparent;
+  margin: 0 8px;
+  font-size: 1rem;
+  padding: 6px 10px;
   border-radius: var(--border-radius);
-  margin-left: 5px; /* Espacio entre links */
+  transition: background-color 0.2s;
+  white-space: nowrap;
 }
 .user-nav .nav-link:hover {
-  border-color: var(--amazon-text-light);
-}
-.user-nav .nav-link span {
-  display: block;
-}
-.user-nav .nav-link span:last-child {
-  font-weight: bold;
-  font-size: 14px;
+  background-color: rgba(236, 240, 241, 0.1);
 }
 
+/* ICONO + CONTADOR CARRITO */
 .cart-link {
-  display: flex;
-  align-items: center;
-}
-.cart-link .cart-count {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--amazon-orange);
-  margin-right: 2px;
-}
-
-.header-bottom {
-  background-color: var(--amazon-medium-blue);
-  padding: 8px 0;
-  height: 39px;
-}
-
-.header-bottom .main-nav a {
-  color: var(--amazon-text-light);
-  padding: 8px 10px;
-  font-size: 14px;
-  text-decoration: none;
-  border: 1px solid transparent;
-  border-radius: var(--border-radius);
-}
-.header-bottom .main-nav a:hover {
-  border-color: var(--amazon-text-light);
-}
-
-/* Placeholder for icons - idealmente usarías SVG o una fuente de iconos */
-.icon-location::before { content: "📍"; }
-.icon-search::before { content: "🔍"; }
-
-
-.main-nav a {
-  color: #3b4a5a;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: background 0.3s;
-}
-
-.main-nav a:hover {
-  background: #34495e;
-}
-
-/* Contenedor categoría (posición relativa para el select absoluto) */
-.categoria-container {
   position: relative;
-  display: inline-block;
+  font-size: 1.25rem;
 }
-
-/* Select oculto por defecto */
-.categoria-select {
-  display: none;
+.cart-count {
+  background-color: var(--accent-color);
+  color: var(--input-bg);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 200px;
-  padding: 8px;
-  background: #ddd;
-  border: 2px solid var(--amazon-orange);
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 100;
+  top: -8px;
+  right: -8px;
 }
 
-
-.categoria-container:hover .categoria-select {
-  display: block;
-}
-
-
-.categoria-select option {
-  background: orange;
-  text-decoration-color: #34495e;
-  padding: 4px;
-  cursor: pointer;
-}
-
-.categoria-select option:hover {
-  background: #f0f0f0;
+/* RESPONSIVE HEADER */
+@media (max-width: 768px) {
+  .header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .search-bar {
+    max-width: 100%;
+    margin: 8px 0;
+  }
+  .user-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .user-nav .nav-link {
+    font-size: 0.9rem;
+    margin: 4px 4px;
+  }
 }

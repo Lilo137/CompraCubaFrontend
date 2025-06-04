@@ -1,0 +1,127 @@
+<!-- src/app/components/account/account.component.html -->
+<div class="login-container">
+  <div class="login-card card" *ngIf="!loading; else loadingTpl">
+    <h1>Mis Datos</h1>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+      <!-- Usuario (solo lectura) -->
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          [disabled]="true"
+        />
+      </div>
+
+      <!-- Correo (solo lectura) -->
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          [disabled]="true"
+        />
+      </div>
+
+      <!-- Provincia -->
+      <div class="form-group">
+        <label for="provincia">Provincia</label>
+        <select
+          id="provincia"
+          formControlName="provincia"
+          [class.is-invalid]="
+            accountForm.get('provincia')?.touched &&
+            accountForm.get('provincia')?.invalid
+          "
+        >
+          <option value="" disabled>Selecciona tu provincia</option>
+          <option *ngFor="let p of ['Pinar del Río','Artemisa','La Habana','Mayabeque','Matanzas','Cienfuegos','Villa Clara','Sancti Spíritus','Ciego de Ávila','Camagüey','Las Tunas','Granma','Holguín','Santiago de Cuba','Guantánamo','Isla de la Juventud']" [value]="p">
+            {{ p }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="accountForm.get('provincia')?.touched && accountForm.get('provincia')?.invalid">
+          Debes seleccionar una provincia.
+        </div>
+      </div>
+
+      <!-- Método de Pago -->
+      <div class="form-group">
+        <label for="metodoPago">Método de Pago</label>
+        <select
+          id="metodoPago"
+          formControlName="metodoPago"
+          [class.is-invalid]="
+            accountForm.get('metodoPago')?.touched &&
+            accountForm.get('metodoPago')?.invalid
+          "
+        >
+          <option value="" disabled>Selecciona un método</option>
+          <option value="Enzona">Enzona</option>
+          <option value="Transfermovil">Transfermovil</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="accountForm.get('metodoPago')?.touched && accountForm.get('metodoPago')?.invalid">
+          Debes seleccionar un método de pago.
+        </div>
+      </div>
+
+      <!-- Contraseña (opcional) -->
+      <div class="form-group">
+        <label for="password">Nueva Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Dejar vacío para no cambiar"
+          [class.is-invalid]="
+            accountForm.get('password')?.touched &&
+            accountForm.get('password')?.invalid
+          "
+        />
+        <div class="invalid-feedback" *ngIf="accountForm.get('password')?.touched && accountForm.get('password')?.errors?.['minlength']">
+          Mínimo 6 caracteres.
+        </div>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Repite la nueva contraseña"
+          [class.is-invalid]="
+            accountForm.hasError('passwordsMismatch') && accountForm.get('confirmPassword')?.touched
+          "
+        />
+        <div class="invalid-feedback" *ngIf="accountForm.hasError('passwordsMismatch') && accountForm.get('confirmPassword')?.touched">
+          Las contraseñas deben coincidir.
+        </div>
+      </div>
+
+      <!-- Botón Guardar cambios -->
+      <button
+        type="submit"
+        class="button button-primary register-button"
+        [disabled]="accountForm.invalid || submitting"
+      >
+        {{ submitting ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Cargando o error inicial -->
+  <ng-template #loadingTpl>
+    <div class="loading-error">
+      <p *ngIf="error" class="error-text">{{ error }}</p>
+      <p *ngIf="!error">Cargando datos de usuario...</p>
+    </div>
+  </ng-template>
+</div>

@@ -1,3 +1,4 @@
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -8,14 +9,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 
 @NgModule({
-  declarations: [], // usando standalone components
+  declarations: [],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    // Importar los componentes standalone
-    AppComponent
+    AppComponent // tu componente raíz
   ],
   providers: [
     {

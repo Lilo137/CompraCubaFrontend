@@ -1,10 +1,108 @@
-<div *ngIf="cart.items.length > 0">
-  <div *ngFor="let item of cart.items">
-    {{ item.product.name }} - {{ item.quantity }} x {{ item.price | currency }}
+<!-- src/app/components/cart/cart.component.html -->
+
+<div class="cart-container" *ngIf="cart; else loadingOrError">
+  <h2>Tu Carrito</h2>
+
+  <div *ngIf="cart.items.length > 0; else emptyCart">
+    <div class="cart-main">
+      <!-- ── LISTA DE ÍTEMS ── -->
+      <div class="cart-items-list">
+        <div *ngFor="let item of cart.items" class="cart-item-card">
+          <img
+            [src]="
+              item.imagen 
+                ? (apiUrl + item.imagen) 
+                : '/assets/no-image.png'
+            "
+            alt="{{ item.nombre }}"
+            class="cart-item-img"
+            (error)="onImgError($event)"
+          />
+          <div class="cart-item-info">
+            <h4>{{ item.nombre }}</h4>
+            <p><strong>Precio:</strong> {{ item.precioUnitario | currency:'USD' }}</p>
+            <p><strong>Total:</strong> {{ item.total | currency:'USD' }}</p>
+            <div class="quantity-control">
+              <label for="qty-{{ item.productId }}">Cantidad:</label>
+              <input
+                id="qty-{{ item.productId }}"
+                type="number"
+                [ngModel]="item.cantidad"
+                (ngModelChange)="actualizarCantidad(item, $event)"
+                min="0"
+              />
+            </div>
+            <button class="btn btn-danger btn-sm" (click)="actualizarCantidad(item, 0)">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESUMEN DEL PEDIDO ── -->
+      <div class="cart-summary">
+        <h3>Resumen del Pedido</h3>
+        <p><strong>Subtotal:</strong> {{ cart.subtotal | currency:'USD' }}</p>
+        <p><strong>Envío:</strong> {{ cart.envio | currency:'USD' }}</p>
+        <p>
+          <strong>Impuestos ({{ (taxRate * 100) | number:'1.0-0' }}%):</strong>
+          {{ taxAmount | currency:'USD' }}
+        </p>
+        <p>
+          <strong>Total:</strong>
+          {{ (cart.subtotal + cart.envio + taxAmount) | currency:'USD' }}
+        </p>
+        <div class="payment-method">
+          <label for="method">Método de Pago:</label>
+          <select id="method" [(ngModel)]="paymentMethod">
+            <option value="Enzona">Enzona</option>
+            <option value="Transfermovil">Transfermovil</option>
+          </select>
+        </div>
+        <button class="btn btn-success btn-block" (click)="checkout()">Pagar Ahora</button>
+        <button class="btn btn-secondary btn-block" (click)="continueShopping()">
+          Seguir Comprando
+        </button>
+      </div>
+    </div>
   </div>
-  <p>Total: {{ cart.total | currency }}</p>
-  <button (click)="goToCheckout()">Proceder al pago</button>
 </div>
-<div *ngIf="cart.items.length === 0">
-  <p>Tu carrito está vacío</p>
-</div>
+
+<ng-template #emptyCart>
+  <p>Tu carrito está vacío.</p>
+</ng-template>
+
+<ng-template #loadingOrError>
+  <p *ngIf="error">{{ error }}</p>
+  <p *ngIf="!error">Cargando carrito...</p>
+</ng-template>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!--                             MODAL DE PAGO                             -->
+<ng-container *ngIf="showPaymentModal">
+  <!-- Overlay difuminado -->
+  <div class="payment-overlay" (click)="closePaymentModal()"></div>
+
+  <!-- Tarjeta centrada -->
+  <div class="payment-modal">
+    <h3>Escanea para realizar el pago</h3>
+    <img
+      [src]="qrImageUrl || '/assets/no-image.png'"
+      alt="QR de Pago"
+      class="payment-qr"
+      (error)="onImgError($event)"
+    />
+    <p class="countdown-text">
+      Tienes <strong>{{ (countdownRemaining / 60) | number:'1.0-0' }}</strong>:
+      {{ (countdownRemaining % 60) < 10
+        ? ('0' + (countdownRemaining % 60))
+        : (countdownRemaining % 60)
+      }} minutos para completar el pago.  
+      <br />
+      Si no se paga en 10 minutos, el pedido será cancelado.
+    </p>
+    <button class="btn btn-primary btn-ok" (click)="confirmPayment()">
+      OK
+    </button>
+  </div>
+</ng-container>

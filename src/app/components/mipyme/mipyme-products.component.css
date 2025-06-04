@@ -1,0 +1,173 @@
+/* src/app/components/mipyme/mipyme-products.component.css */
+
+/* Contenedor principal */
+.products-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.products-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.products-header h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin: 0;
+}
+.products-header .btn {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+/* Formulario de creación y edición */
+.new-product-section,
+.edit-product-section {
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #34495e;
+}
+
+/* Estilo de inputs inválidos */
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+}
+
+/* Placeholder */
+.placeholder-box {
+  background: #fafafa;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-style: italic;
+  min-height: 80px;
+}
+
+/* Preview de nuevas imágenes */
+.preview-new-images,
+.existing-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.preview-thumb img,
+.thumb-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Botón eliminar miniatura */
+.thumb-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.btn-delete-img {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: rgba(192, 57, 43, 0.8);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Listado de productos en tarjetas */
+.product-list {
+  margin-top: 2rem;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.product-card .card-body {
+  padding: 1rem;
+}
+.product-card .card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+.product-card .card-text {
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+.product-card .description-text {
+  font-style: italic;
+  max-height: 3rem;
+  overflow: hidden;
+}
+.product-card .low-stock {
+  color: #c0392b;
+  font-weight: bold;
+}
+.card-actions {
+  margin-top: 1rem;
+  text-align: right;
+}
+.card-actions .btn {
+  margin-left: 0.5rem;
+}
+
+/* Mensaje “no hay productos” */
+.no-products {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .new-product-section,
+  .edit-product-section {
+    padding: 1rem;
+  }
+  .products-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

@@ -12,43 +12,77 @@ export interface RegisterDto {
   metodoPago: 'Enzona' | 'Transfermovil';
   rolID: number;
 }
-export interface AuthResponse { access_token: string; user: any; }
+export interface AuthResponse {
+  access_token: string;
+  user: { id: number; username: string; email: string; rolID: number; provincia?: string; metodoPago?: string; };
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = 'http://localhost:3000';
+  private _user: { id: number; username: string; email: string; rolID: number; provincia?: string; metodoPago?: string } | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Solo intento leer de localStorage si existe
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          this._user = JSON.parse(storedUser);
+        } catch {
+          this._user = null;
+        }
+      }
+    }
+  }
 
   login(credentials: LoginDto): Observable<AuthResponse> {
-  console.log('[AuthService] login() llamado con:', credentials);
-  return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, credentials)
-    .pipe(
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap(res => {
-        console.log('[AuthService] respuesta recibida:', res);
-        if (typeof window !== 'undefined') {
+        // Guardamos en localStorage solo si existe
+        if (typeof window !== 'undefined' && window.localStorage) {
           localStorage.setItem('token', res.access_token);
+          localStorage.setItem('user', JSON.stringify(res.user));
         }
+        this._user = res.user;
       })
     );
-}
+  }
 
   register(data: RegisterDto): Observable<any> {
     return this.http.post(`${this.baseUrl}/users`, data);
   }
 
   logout(): void {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
+    this._user = null;
   }
 
   get token(): string | null {
-    if (typeof window === 'undefined') return null;
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return null;
+    }
     return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
     return !!this.token;
+  }
+
+  get user(): { id: number; username: string; email: string; rolID: number; provincia?: string; metodoPago?: string } | null {
+    return this._user;
+  }
+
+  isMipyme(): boolean {
+    return this._user?.rolID === 2;
+  }
+  setUser(user: { id: number; username: string; email: string; rolID: number; provincia?: string; metodoPago?: string }) {
+    this._user = user;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   }
 }

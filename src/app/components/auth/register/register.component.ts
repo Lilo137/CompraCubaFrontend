@@ -1,7 +1,13 @@
-// register.component.ts
+// src/app/components/auth/register/register.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, RegisterDto } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/models/user.model';
@@ -9,7 +15,7 @@ import { UserRole } from '../../../core/models/user.model';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],  // ← IMPORTANTE ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule], 
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -22,13 +28,16 @@ export class RegisterComponent implements OnInit {
     'Camagüey', 'Las Tunas', 'Granma', 'Holguín', 'Santiago de Cuba',
     'Guantánamo', 'Isla de la Juventud'
   ];
-  // Debes usar exactamente los valores de tu enum Prisma MetodoPago
-  metodosPago: Array<'Enzona'|'Transfermovil'> = ['Enzona', 'Transfermovil'];
+  metodosPago: Array<'Enzona' | 'Transfermovil'> = [
+    'Enzona',
+    'Transfermovil'
+  ];
 
   private roleToIdMap: Record<string, number> = {
     USER: 1,
     MIPYME: 2
   };
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -47,7 +56,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('submit fired', this.registerForm.value);
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
@@ -67,5 +75,3 @@ export class RegisterComponent implements OnInit {
     });
   }
 }
-
-  

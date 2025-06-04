@@ -1,19 +1,105 @@
 <div class="home-container">
-  <h1>Bienvenido a CompraCuba</h1>
-  <div class="home-actions">
+  <h1 class="home-title">Bienvenido a CompraCuba</h1>
+
+  <div class="home-actions" *ngIf="!auth.isAuthenticated()">
     <button routerLink="/login" class="btn btn-primary">Iniciar Sesión</button>
     <button routerLink="/register" class="btn btn-secondary">Regístrate</button>
   </div>
 
-  <h2>Productos Disponibles</h2>
-  <div class="product-list">
-    <div *ngFor="let p of products" class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ p.name }}</h5>
-        <p class="card-text">{{ p.description }}</p>
-        <p class="card-text"><strong>Precio:</strong> {{ p.precioGeneral | currency:'USD' }}</p>
-        <a [routerLink]="['/products', p.id]" class="btn btn-outline-primary">Ver Detalle</a>
-      </div>
+  <section class="product-list-section">
+    <h2 class="section-title">Productos Disponibles</h2>
+
+    <div *ngIf="loading" class="loading-message">
+      Cargando productos...
     </div>
-  </div>
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error">
+      <div
+        *ngIf="filteredProducts.length > 0; else noProductsTemplate"
+        class="products-grid"
+      >
+        <div *ngFor="let p of filteredProducts" class="product-card card">
+          <!-- Miniatura: si hay imágenes, tomamos la primera -->
+          <div class="thumb-small" *ngIf="p.imagenes && p.imagenes.length > 0; else noThumb">
+            <img
+              [src]="apiUrl + p.imagenes[0].url"
+              alt="{{ p.name }}"
+              class="product-img"
+              (error)="onImgError($event)"
+            />
+          </div>
+          <ng-template #noThumb>
+            <div class="thumb-small placeholder-thumb">
+              <img src="/assets/no-image.png" alt="Sin imagen" />
+            </div>
+          </ng-template>
+
+          <div class="card-body">
+            <h5 class="card-title">{{ p.name }}</h5>
+            <p class="card-text description">{{ p.description }}</p>
+            <p class="card-text price">{{ p.precioGeneral | currency:'USD' }}</p>
+            <div class="card-actions">
+              <button (click)="openDetail(p)" class="btn btn-outline-primary">
+                Ver Detalle
+              </button>
+              <button
+                *ngIf="auth.isAuthenticated() && !auth.isMipyme()"
+                (click)="addToCart(p.id)"
+                class="btn btn-success"
+              >
+                Añadir al carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noProductsTemplate>
+        <div class="no-products-message">
+          No hay productos disponibles que coincidan con la búsqueda.
+        </div>
+      </ng-template>
+    </div>
+  </section>
 </div>
+
+<!-- ——— MODAL DE DETALLE ——— -->
+<ng-container *ngIf="selectedProduct">
+  <!-- Overlay -->
+  <div class="overlay" (click)="closeDetail()"></div>
+
+  <!-- Modal centrado -->
+  <div class="detail-modal">
+    <button class="close-btn" (click)="closeDetail()">✕</button>
+
+    <!-- Carrusel de imágenes -->
+    <div class="carousel-container" *ngIf="selectedProduct.imagenes.length > 0">
+      <button class="carousel-btn prev" (click)="prevImg()">‹</button>
+      <img
+        [src]="apiUrl + selectedProduct.imagenes[currentImgIndex].url"
+        alt="Imagen {{ currentImgIndex + 1 }} de {{ selectedProduct.name }}"
+        class="detail-img"
+        (error)="onImgError($event)"
+      />
+      <button class="carousel-btn next" (click)="nextImg()">›</button>
+    </div>
+
+    <!-- Si no hay imágenes, mostramos placeholder grande -->
+    <ng-container *ngIf="selectedProduct.imagenes.length === 0">
+      <img
+        src="/assets/no-image.png"
+        alt="Sin imagen"
+        class="detail-img"
+        style="max-height: 300px; margin-bottom: 20px;"
+      />
+    </ng-container>
+
+    <!-- Información de texto -->
+    <h2>{{ selectedProduct.name }}</h2>
+    <p><strong>Descripción:</strong> {{ selectedProduct.description }}</p>
+    <p><strong>Precio:</strong> {{ selectedProduct.precioGeneral | currency:'USD' }}</p>
+  </div>
+</ng-container>

@@ -1,6 +1,72 @@
-h2 {
-    text-align: center;
-    background-color: var(--amazon-orange);
-    padding: 10px;
+/* src/app/components/layout/footer/footer.component.css */
 
+/* Usa los mismos colores que el header/sidebar */
+:root {
+  --footer-bg: #2c3e50;
+  --footer-text: #ecf0f1;
+  --footer-link: #bdc3c7;
+  --footer-link-hover: #ffffff;
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 20px 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-left h3 {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  margin: 0 0 5px;
+}
+.footer-left h3 span {
+  color: var(--accent-color);
+}
+.footer-left p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #010203;
+}
+
+.footer-right .footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.footer-right .footer-links li a {
+  color: var(--footer-link);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.footer-right .footer-links li a:hover {
+  color: var(--footer-link-hover);
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .footer-right .footer-links {
+    flex-direction: column;
+    gap: 8px;
+  }
 }

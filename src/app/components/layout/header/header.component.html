@@ -1,39 +1,59 @@
 <header class="main-header">
   <div class="header-top container-fluid">
+    <!-- LOGO -->
     <div class="logo">
-      <a routerLink="/">CompraCuba</a>
+      <a routerLink="/">Compra<span>Cuba</span></a>
     </div>
 
-    <div class="search-bar">
-      <select class="search-category-select">
-        <option>Todo</option>
-        <option>Componentes de PC</option>
-        <option>Laptops</option>
-        <option>Servicios Online</option>
-      </select>
-      <input type="text" placeholder="Buscar en CompraCuba">
-      <button class="search-button"><i class="icon-search"></i></button>
+    <!-- SEARCH BAR: aparece solo en “tienda” -->
+    <div *ngIf="showSearchBar" class="search-bar">
+      <div class="search-input-group">
+        <input
+          type="text"
+          placeholder="Buscar productos..."
+          class="search-input"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchTermChange($event)"
+        />
+        <select
+          class="search-category-select"
+          [(ngModel)]="selectedCategory"
+          (ngModelChange)="onCategoryChange($event)"
+        >
+          <option *ngFor="let cat of categories" [value]="cat">
+            {{ cat }}
+          </option>
+        </select>
+      </div>
     </div>
 
+    <!-- NAVEGACIÓN DE USUARIO -->
     <nav class="user-nav">
+      <!-- Si no está autenticado -->
       <ng-container *ngIf="!auth.isAuthenticated(); else logged">
-        <a routerLink="/login" class="nav-link">
-          <span>Iniciar</span><span>Sesión</span>
-        </a>
-        <a routerLink="/register" class="nav-link">
-          <span>Regístrate</span>
-        </a>
+        <a routerLink="/login" class="nav-link">Iniciar Sesión</a>
+        <a routerLink="/register" class="nav-link">Registrarse</a>
       </ng-container>
+
+      <!-- Cuando está logueado -->
       <ng-template #logged>
-        <a (click)="auth.logout(); router.navigate(['/'])" class="nav-link">
-          <span>Cerrar</span><span>Sesión</span>
-        </a>
-        <a routerLink="/orders" class="nav-link">
-          <span>Pedidos</span>
-        </a>
-        <a routerLink="/cart" class="nav-link cart-link">
-          <span class="cart-count">0</span><span>Carrito</span>
-        </a>
+        <!-- Si ES MIPYME -->
+        <ng-container *ngIf="auth.isMipyme(); else userLinks">
+          <a routerLink="/mipyme" class="nav-link">Dashboard</a>
+        </ng-container>
+
+        <!-- Si NO es MIPYME (usuario normal) -->
+        <ng-template #userLinks>
+          <a routerLink="/" class="nav-link">Tienda</a>
+          <a routerLink="/cart" class="nav-link cart-link">
+            🛒
+            <span class="cart-count">{{ cartCount }}</span>
+          </a>
+          <a routerLink="/account" class="nav-link">Mi Cuenta</a>
+        </ng-template>
+
+        <!-- Cerrar sesión -->
+        <a (click)="logout()" class="nav-link">Cerrar Sesión</a>
       </ng-template>
     </nav>
   </div>

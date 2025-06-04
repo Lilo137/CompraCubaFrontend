@@ -1,0 +1,84 @@
+<!-- src/app/components/mipyme/mipyme-panel.component.html -->
+<div class="panel-container">
+  <!-- Título general -->
+  <h1 class="panel-title">Resumen de Inventario</h1>
+
+  <!-- Loader / Error -->
+  <div *ngIf="loading" class="loader">Cargando datos…</div>
+  <div *ngIf="error" class="alert-error">{{ error }}</div>
+
+  <!-- Contenido cuando ya cargó -->
+  <div *ngIf="!loading && !error" class="panel-content">
+    <!-- Resúmenes -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h2>{{ totalProducts }}</h2>
+        <p>Total de Productos</p>
+      </div>
+      <div class="summary-card">
+        <h2>{{ lowStockCount }}</h2>
+        <p>Stock Bajo (≤ 5)</p>
+      </div>
+      <div class="summary-card">
+        <h2>{{ totalInventoryValue | currency:'USD' }}</h2>
+        <p>Valor Total Inventario</p>
+      </div>
+      <div class="summary-card">
+        <h2>{{ averagePrice | currency:'USD' }}</h2>
+        <p>Precio Promedio</p>
+      </div>
+    </div>
+
+    <!-- Gráfico de barras CSS -->
+    <div class="chart-container">
+      <h3>Distribución de Stock</h3>
+      <div class="bar-chart">
+        <div
+          class="bar low-stock"
+          [style.height.%]="(lowStockCount / totalProducts) * 100"
+        >
+          <span>{{ lowStockCount }}</span>
+          <p>Stock Bajo</p>
+        </div>
+        <div
+          class="bar good-stock"
+          [style.height.%]="((totalProducts - lowStockCount) / totalProducts) * 100"
+        >
+          <span>{{ totalProducts - lowStockCount }}</span>
+          <p>Stock Suficiente</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de productos -->
+    <div class="product-cards">
+      <div *ngFor="let p of products" class="card">
+        <div class="card-header">
+          <h3>{{ p.name }}</h3>
+        </div>
+        <div class="card-body">
+          <!-- Thumbnail o placeholder -->
+          <div class="thumb-small" *ngIf="p.imagenes && p.imagenes.length > 0; else noThumb">
+            <img
+              [src]="apiUrl + p.imagenes[0].url"
+              alt="{{ p.name }}"
+              (error)="onImgError($event)"
+            />
+          </div>
+          <ng-template #noThumb>
+            <div class="thumb-small placeholder-thumb">
+              <img src="/assets/no-image.png" alt="Sin imagen" />
+            </div>
+          </ng-template>
+
+          <p class="card-info"><strong>Stock:</strong> {{ p.stock }}</p>
+          <p class="card-info">
+            <strong>Precio:</strong> {{ p.precioGeneral | currency:'USD' }}
+          </p>
+          <p class="card-info"><strong>Categoría:</strong> {{ p.categoria }}</p>
+          <p class="card-desc">{{ p.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
