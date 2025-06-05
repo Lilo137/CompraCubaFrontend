@@ -1,4 +1,3 @@
-<!-- src/app/components/auth/register/register.component.html -->
 <div class="login-container">
   <div class="login-card card">
     <h1>Crear tu cuenta de CompraCuba</h1>
@@ -105,6 +104,36 @@
         <div class="invalid-feedback" *ngIf="registerForm.get('provincia')?.touched && registerForm.get('provincia')?.invalid">
           <span *ngIf="registerForm.get('provincia')?.errors?.['required']">
             Debes seleccionar una provincia.
+          </span>
+        </div>
+      </div>
+
+      <!-- Rol de usuario -->
+      <div class="form-group">
+        <label>Rol:</label>
+        <div class="radio-group">
+          <label>
+            <input
+              type="radio"
+              formControlName="role"
+              [value]="UserRole.USER"
+              required
+            />
+            Usuario
+          </label>
+          <label>
+            <input
+              type="radio"
+              formControlName="role"
+              [value]="UserRole.MIPYME"
+              required
+            />
+            MIPYME (Vendedor)
+          </label>
+        </div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('role')?.touched && registerForm.get('role')?.invalid">
+          <span *ngIf="registerForm.get('role')?.errors?.['required']">
+            Debes elegir un rol.
           </span>
         </div>
       </div>

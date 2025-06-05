@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
+import { RegisteradmComponent } from './components/auth/registeradm/registeradm.component';
 import { PublicarProductoComponent } from './dashboard/publicar-producto/publicar-producto.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
@@ -32,6 +33,14 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    title: 'Registrarse',
+    canActivate: [AuthGuard],
+    data: { inversion: true }
+  },
+
+  {
+    path: 'registeradm',
+    component: RegisteradmComponent,
     title: 'Registrarse',
     canActivate: [AuthGuard],
     data: { inversion: true }

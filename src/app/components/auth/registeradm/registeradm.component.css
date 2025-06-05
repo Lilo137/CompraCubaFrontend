@@ -1,0 +1,151 @@
+/* src/app/components/auth/register/register.component.css */
+
+/* === Reutilizamos casi todo de login.component.css === */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: calc(100vh - 120px);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 350px;
+  padding: 20px 26px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.login-card h1 {
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: var(--input-height);
+  padding: 8px 12px;
+  border: 1px solid #a6a6a6;
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 1px 0 rgba(0,0,0,.07) inset;
+  outline: none;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--amazon-orange);
+  box-shadow: 0 0 0 3px #c8f3fa, 0 1px 2px rgba(15,17,17,.15) inset;
+}
+
+/* Botones de login y registro */
+.login-button,
+.register-button {
+  width: 100%;
+  height: var(--input-height);
+  margin-top: 10px;
+  border: none;
+}
+
+/* Texto de términos y condiciones (no se usa aquí) */
+.terms {
+  font-size: 12px;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* Separador con línea y texto centrado */
+.divider {
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+  font-size: 12px;
+  color: #767676;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  display: inline-block;
+  width: 40%;
+  height: 1px;
+  background-color: #ddd;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+
+/* Footer del formulario (enlace a Login) */
+.login-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-footer .divider {
+  margin: 20px 0;
+}
+
+/* Radio buttons */
+.radio-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+.radio-group label {
+  font-weight: normal;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+.radio-group input[type="radio"] {
+  margin-right: 5px;
+  width: auto;
+  height: auto;
+}
+
+/* Validaciones */
+.is-invalid {
+  border-color: #e74c3c !important;
+}
+.invalid-feedback {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* === Responsive pequeño === */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 16px 20px;
+  }
+  .login-card h1 {
+    font-size: 24px;
+  }
+  .form-group input,
+  .form-group select {
+    font-size: 13px;
+  }
+  .login-button,
+  .register-button {
+    font-size: 0.95rem;
+  }
+}

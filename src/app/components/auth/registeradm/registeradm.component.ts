@@ -16,10 +16,10 @@ import { UserRole } from '../../../core/models/user.model';
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule], 
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  templateUrl: './registeradm.component.html',
+  styleUrls: ['./registeradm.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisteradmComponent implements OnInit {
   registerForm!: FormGroup;
   UserRole = UserRole;
   provincias = [
@@ -67,7 +67,7 @@ export class RegisterComponent implements OnInit {
       password: fv.password,
       metodoPago: fv.metodoPago,
       provincia: fv.provincia,
-      rolID: 1
+      rolID: this.roleToIdMap[fv.role]
     };
     this.auth.register(dto).subscribe({
       next: () => this.router.navigate(['/login']),
