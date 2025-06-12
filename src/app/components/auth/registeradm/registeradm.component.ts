@@ -21,6 +21,7 @@ import { UserRole } from '../../../core/models/user.model';
 })
 export class RegisteradmComponent implements OnInit {
   registerForm!: FormGroup;
+  errorMsg: string | null = null;
   UserRole = UserRole;
   provincias = [
     'Pinar del Río', 'Artemisa', 'La Habana', 'Mayabeque', 'Matanzas',
@@ -56,6 +57,7 @@ export class RegisteradmComponent implements OnInit {
   }
 
   onSubmit() {
+    this.errorMsg = null;
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
@@ -71,7 +73,16 @@ export class RegisteradmComponent implements OnInit {
     };
     this.auth.register(dto).subscribe({
       next: () => this.router.navigate(['/login']),
-      error: e => alert('Error al registrar')
+      error: err => {
+        // Si el backend devuelve JSON { statusCode, message }
+        if (err.error?.message) {
+          this.errorMsg = Array.isArray(err.error.message) 
+            ? err.error.message.join(', ') 
+            : err.error.message;
+        } else {
+          this.errorMsg = 'Error desconocido al registrar';
+        }
+      }
     });
   }
 }

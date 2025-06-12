@@ -1,8 +1,12 @@
-<!-- src/app/components/auth/register/register.component.html -->
 <div class="login-container">
   <div class="login-card card">
     <h1>Crear tu cuenta de CompraCuba</h1>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Mensaje de error global -->
+      <div *ngIf="errorMsg" class="alert alert-danger">
+        {{ errorMsg }}
+      </div>
+
       <!-- Nombre de usuario -->
       <div class="form-group">
         <label for="username">Nombre de usuario</label>
@@ -10,13 +14,16 @@
           id="username"
           type="text"
           formControlName="username"
-          required
           [class.is-invalid]="
             registerForm.get('username')?.invalid &&
             registerForm.get('username')?.touched
           "
         />
-        <div class="invalid-feedback" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid">
+        <div
+          *ngIf="registerForm.get('username')?.touched &&
+                 registerForm.get('username')?.invalid"
+          class="invalid-feedback"
+        >
           <span *ngIf="registerForm.get('username')?.errors?.['required']">
             El nombre de usuario es obligatorio.
           </span>
@@ -30,12 +37,16 @@
           id="email"
           type="email"
           formControlName="email"
-          required
           [class.is-invalid]="
-            registerForm.get('email')?.invalid && registerForm.get('email')?.touched
+            registerForm.get('email')?.invalid &&
+            registerForm.get('email')?.touched
           "
         />
-        <div class="invalid-feedback" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+        <div
+          *ngIf="registerForm.get('email')?.touched &&
+                 registerForm.get('email')?.invalid"
+          class="invalid-feedback"
+        >
           <span *ngIf="registerForm.get('email')?.errors?.['required']">
             El correo electrónico es obligatorio.
           </span>
@@ -52,17 +63,24 @@
           id="password"
           type="password"
           formControlName="password"
-          required
           [class.is-invalid]="
-            registerForm.get('password')?.invalid && registerForm.get('password')?.touched
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
           "
         />
-        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+        <div
+          *ngIf="registerForm.get('password')?.touched &&
+                 registerForm.get('password')?.invalid"
+          class="invalid-feedback"
+        >
           <span *ngIf="registerForm.get('password')?.errors?.['required']">
             La contraseña es obligatoria.
           </span>
           <span *ngIf="registerForm.get('password')?.errors?.['minlength']">
-            Mínimo {{ registerForm.get('password')?.errors?.['minlength']?.requiredLength }} caracteres.
+            Mínimo
+            {{ registerForm.get('password')?.errors?.['minlength']
+               ?.requiredLength }}
+            caracteres.
           </span>
         </div>
       </div>
@@ -73,15 +91,19 @@
         <select
           id="metodoPago"
           formControlName="metodoPago"
-          required
           [class.is-invalid]="
-            registerForm.get('metodoPago')?.invalid && registerForm.get('metodoPago')?.touched
+            registerForm.get('metodoPago')?.invalid &&
+            registerForm.get('metodoPago')?.touched
           "
         >
           <option value="" disabled>Selecciona un método</option>
           <option *ngFor="let m of metodosPago" [value]="m">{{ m }}</option>
         </select>
-        <div class="invalid-feedback" *ngIf="registerForm.get('metodoPago')?.touched && registerForm.get('metodoPago')?.invalid">
+        <div
+          *ngIf="registerForm.get('metodoPago')?.touched &&
+                 registerForm.get('metodoPago')?.invalid"
+          class="invalid-feedback"
+        >
           <span *ngIf="registerForm.get('metodoPago')?.errors?.['required']">
             Debes seleccionar un método de pago.
           </span>
@@ -94,15 +116,19 @@
         <select
           id="provincia"
           formControlName="provincia"
-          required
           [class.is-invalid]="
-            registerForm.get('provincia')?.invalid && registerForm.get('provincia')?.touched
+            registerForm.get('provincia')?.invalid &&
+            registerForm.get('provincia')?.touched
           "
         >
           <option value="" disabled>Selecciona tu provincia</option>
           <option *ngFor="let p of provincias" [value]="p">{{ p }}</option>
         </select>
-        <div class="invalid-feedback" *ngIf="registerForm.get('provincia')?.touched && registerForm.get('provincia')?.invalid">
+        <div
+          *ngIf="registerForm.get('provincia')?.touched &&
+                 registerForm.get('provincia')?.invalid"
+          class="invalid-feedback"
+        >
           <span *ngIf="registerForm.get('provincia')?.errors?.['required']">
             Debes seleccionar una provincia.
           </span>
